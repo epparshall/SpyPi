@@ -18,7 +18,7 @@ try:
         # Capture a frame
         frame = picam2.capture_array()
         t = time.time()
-        freq = 10 # Hz
+        freq = 0.1 # Hz
         a = np.sin(t * freq * np.pi) * 90
         a = int(a)
 
