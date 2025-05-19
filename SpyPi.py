@@ -1,5 +1,8 @@
 from picamera2 import Picamera2, Preview
 import cv2
+import pantilthat
+import time
+import numpy as np
 
 # Initialize the camera
 picam2 = Picamera2()
@@ -14,6 +17,13 @@ try:
     while True:
         # Capture a frame
         frame = picam2.capture_array()
+        t = time.time()
+        freq = 10 # Hz
+        a = math.sin(t * freq * np.pi) * 90
+        a = int(a)
+
+        pantilthat.pan(a)
+        pantilthat.tilt(a)
 
         # Display the frame
         cv2.imshow("Camera Output", frame)
