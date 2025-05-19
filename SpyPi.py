@@ -19,7 +19,7 @@ try:
         frame = picam2.capture_array()
         t = time.time()
         freq = 10 # Hz
-        a = math.sin(t * freq * np.pi) * 90
+        a = np.sin(t * freq * np.pi) * 90
         a = int(a)
 
         pantilthat.pan(a)
