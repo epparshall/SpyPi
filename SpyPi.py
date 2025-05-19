@@ -2,8 +2,6 @@ from picamera2 import Picamera2, Preview
 import cv2
 import pantilthat
 import time
-import numpy as np
-import threading
 
 # Initialize the camera
 picam2 = Picamera2()
@@ -14,44 +12,43 @@ picam2.start()
 pan_angle = 0
 tilt_angle = 0
 
-# Function to update pan and tilt angles based on user input
-def update_orientation():
+# Function to update the pan and tilt angles
+def update_pan_tilt(key):
     global pan_angle, tilt_angle
-    while True:
-        try:
-            # Prompt user for input
-            user_input = input("Enter pan and tilt angles (e.g., 45 30): ").strip()
-            # Parse the input
-            pan, tilt = map(int, user_input.split())
 
-            # Clamp the angles to prevent servo overdrive
-            pan = max(-90, min(90, pan))
-            tilt = max(-90, min(90, tilt))
+    if key == 82:  # Up arrow
+        tilt_angle += 1
+    elif key == 84:  # Down arrow
+        tilt_angle -= 1
+    elif key == 81:  # Left arrow
+        pan_angle -= 1
+    elif key == 83:  # Right arrow
+        pan_angle += 1
 
-            # Update the global angles
-            pan_angle = pan
-            tilt_angle = tilt
-        except ValueError:
-            print("Invalid input. Please enter two integers separated by a space.")
+    # Clamp the angles to stay within the servo's range
+    pan_angle = max(-90, min(90, pan_angle))
+    tilt_angle = max(-90, min(90, tilt_angle))
 
-# Start a separate thread for updating pan and tilt
-thread = threading.Thread(target=update_orientation, daemon=True)
-thread.start()
+    # Update the servo positions
+    pantilthat.pan(pan_angle)
+    pantilthat.tilt(tilt_angle)
+
+    print(f"Pan: {pan_angle}, Tilt: {tilt_angle}")
 
 try:
     while True:
-        # Set the pan and tilt angles
-        pantilthat.pan(pan_angle)
-        pantilthat.tilt(tilt_angle)
-
         # Capture and display the camera feed
         frame = picam2.capture_array()
         flipped_frame = cv2.flip(frame, -1)
         cv2.imshow("Camera Output", flipped_frame)
 
-        # Exit on 'q' key press
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        # Check for key presses
+        key = cv2.waitKey(1) & 0xFF
+
+        if key == ord('q'):  # Exit on 'q'
             break
+        elif key in [81, 82, 83, 84]:  # Arrow keys
+            update_pan_tilt(key)
 finally:
     # Cleanup resources
     picam2.stop()
