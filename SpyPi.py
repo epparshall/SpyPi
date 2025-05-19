@@ -15,8 +15,6 @@ picam2.start()
 
 try:
     while True:
-        # Capture a frame
-        frame = picam2.capture_array()
         t = time.time()
         freq = 0.1 # Hz
         a = np.sin(t * freq * np.pi) * 90
@@ -25,8 +23,11 @@ try:
         pantilthat.pan(a)
         pantilthat.tilt(a)
 
+        frame = picam2.capture_array()
+        flipped_frame = cv2.flip(frame, -1)
+
         # Display the frame
-        cv2.imshow("Camera Output", frame)
+        cv2.imshow("Camera Output", flipped_frame)
 
         # Exit on 'q' key press
         if cv2.waitKey(1) & 0xFF == ord('q'):
