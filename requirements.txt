@@ -1,3 +1,5 @@
 picamera2
 opencv-python
 pantilthat
+py-telegram-bot-api
+python-dotenv
