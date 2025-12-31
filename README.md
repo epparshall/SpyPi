@@ -60,3 +60,23 @@ To automatically run the `SpyPi.py` script when your Raspberry Pi boots up, you 
 
 4. **Save and Exit**:
    Save the file and exit the editor. Your script is now scheduled to run on boot.
+
+## Telegram Integration
+
+To control the SpyPi via Telegram, you'll need to provide a bot token and your chat ID in the `.env` file.
+
+### Getting your Telegram Bot Token
+
+1.  **Find BotFather**: In the Telegram app, search for "BotFather" (it has a verified checkmark) and start a chat with it.
+2.  **Create a new bot**: Type `/newbot` and send it.
+3.  **Name your bot**: Follow the prompts to give your bot a name (e.g., "SpyPi Camera") and a username (e.g., "MySpyPiBot"). The username must end in "bot".
+4.  **Copy your token**: BotFather will provide you with an API token. It's a long string of letters and numbers. Copy this token and paste it into the `.env` file as the value for `TELEGRAM_BOT_TOKEN`.
+
+### Getting your Telegram Chat ID
+
+1.  **Start your bot**: After getting your token, find your newly created bot in Telegram and send it a message (e.g., "/start").
+2.  **Retrieve your chat ID**: Open your web browser and go to the following URL, replacing `<YOUR_TELEGRAM_BOT_TOKEN_HERE>` with the token you just received:
+    ```
+    https://api.telegram.org/bot<YOUR_TELEGRAM_BOT_TOKEN_HERE>/getUpdates
+    ```
+3.  **Find the ID**: Look for the "chat" object in the JSON response. Inside it, you will see an "id" field. This is your `TELEGRAM_CHAT_ID`. Copy this ID and paste it into the `.env` file.
