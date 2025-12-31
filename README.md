@@ -56,7 +56,7 @@ To automatically run the `SpyPi.py` script when your Raspberry Pi boots up, you 
    ```
    @reboot /path/to/start_spypi.sh &
    ```
-   Adding `&` at the end will run the script in the background.
+   Adding `&` at the end will run the script in the background. This is crucial because `SpyPi.py` is a long-running process and running it in the background allows the Raspberry Pi to continue its boot sequence without waiting for the Python script to terminate.
 
 4. **Save and Exit**:
    Save the file and exit the editor. Your script is now scheduled to run on boot.
