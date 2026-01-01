@@ -16,7 +16,9 @@ class SpyPi:
 
         # Initialize the camera
         self.picam2 = Picamera2()
-        self.picam2.configure(self.picam2.create_preview_configuration())
+        preview_config = self.picam2.create_preview_configuration(main={"size": (320,240)}, controls={"FrameRate":15})
+        self.picam2.configure(preview_config)
+
         self.picam2.start()
 
         # Pan and tilt angles
@@ -42,23 +44,24 @@ class SpyPi:
         def handle_snap(message):
             if str(message.chat.id) == self.chat_id:
                 self.bot.reply_to(message, "Capturing image...")
-                try:
-                    # Capture a high-resolution image
-                    config = self.picam2.create_still_configuration()
-                    image_path = "capture.jpg"
-                    self.picam2.switch_mode_and_capture_file(config, image_path, wait=False)
-                    
-                    # Wait for capture to complete
-                    time.sleep(2) 
 
-                    # Send the photo
-                    with open(image_path, 'rb') as photo:
-                        self.bot.send_photo(message.chat.id, photo)
-                    
-                    # Clean up the image file
-                    os.remove(image_path)
-                except Exception as e:
-                    self.bot.reply_to(message, f"Failed to capture image: {e}")
+                def capture_and_send():
+                    try:
+                        config = self.picam2.create_still_configuration()
+                        image_path = "capture.jpg"
+
+                        # Blocking capture
+                        self.picam2.switch_mode_and_capture_file(config, image_path, quality=70, wait=True)
+
+                        with open(image_path, 'rb') as photo:
+                            self.bot.send_photo(message.chat.id, photo)
+
+                        os.remove(image_path)
+                    except Exception as e:
+                        self.bot.reply_to(message, f"Failed to capture image: {e}")
+
+                threading.Thread(target=capture_and_send, daemon=True).start()
+
 
     def start_telegram_polling(self):
         if self.bot:
@@ -66,7 +69,7 @@ class SpyPi:
             # Run polling in a loop to auto-restart on errors
             while True:
                 try:
-                    self.bot.polling(non_stop=True)
+                    self.bot.polling(non_stop=True, interval=3, timeout=20)
                 except Exception as e:
                     print(f"Telegram polling error: {e}. Restarting in 10 seconds.")
                     time.sleep(10)
@@ -99,17 +102,19 @@ class SpyPi:
 
         try:
             while True:
-                # Capture and display the camera feed
                 frame = self.picam2.capture_array()
-                flipped_frame = cv2.flip(frame, -1)
+
+                # Downscale for display
+
+                # frame = cv2.resize(frame, (320, 240))
+                flipped_frame = cv2.flip(frame, 1)
+
                 cv2.imshow("Camera Output", flipped_frame)
 
-                # Check for key presses
-                key = cv2.waitKey(1) & 0xFF
-
-                if key == ord('q'):  # Exit on 'q'
+                key = cv2.waitKey(15) & 0xFF
+                if key == ord('q'):
                     break
-                elif key in [ord('w'), ord('s'), ord('a'), ord('d')]:  # Movement keys
+                elif key in [ord('w'), ord('s'), ord('a'), ord('d')]:
                     self.update_pan_tilt(key)
         finally:
             # Cleanup resources
@@ -119,4 +124,3 @@ class SpyPi:
 if __name__ == "__main__":
     spypi = SpyPi()
     spypi.run()
-
