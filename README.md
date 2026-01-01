@@ -151,3 +151,25 @@ To control the SpyPi via Telegram, you'll need to provide a bot token and your c
     Inside the `result` array, find the `message` object, and inside that, find the `chat` object. The `id` field within this `chat` object is your `TELEGRAM_CHAT_ID`.
     
     **Important**: Be sure to use the `id` from the `chat` object, *not* the `update_id`. Copy this `id` and paste it into the `.env` file.
+
+## Troubleshooting
+
+### `python-prctl` error during `pip install`
+
+If you encounter an error like `error while generating package metadata` for `python-prctl` (or similar packages with C extensions) during `pip install`, it means a system-level development library is missing.
+
+To fix this, you need to install `libprctl-dev` (or the relevant development headers for the problematic package) using your system's package manager.
+
+1.  **Install system dependencies**:
+    These commands should be run directly in your terminal on the Raspberry Pi, *outside* of your Python virtual environment.
+    ```bash
+    sudo apt-get update
+    sudo apt-get install libprctl-dev
+    ```
+
+2.  **Retry pip install**:
+    After the `apt` installation completes, make sure your virtual environment is activated (`source .venv/bin/activate`) and then retry installing your Python requirements:
+    ```bash
+    pip install -r requirements.txt
+    ```
+    This should now complete successfully.
