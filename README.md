@@ -165,3 +165,22 @@ To control the SpyPi via Telegram, you'll need to provide a bot token and your c
     Inside the `result` array, find the `message` object, and inside that, find the `chat` object. The `id` field within this `chat` object is your `TELEGRAM_CHAT_ID`.
     
     **Important**: Be sure to use the `id` from the `chat` object, *not* the `update_id`. Copy this `id` and paste it into the `.env` file.
+
+## Troubleshooting
+
+### Telegram Installation Issues
+
+The `requirements.txt` file uses `python-telegram-bot`, which is the correct package. However, a similarly named package, `py-telegram-bot-api`, can cause conflicts if it was installed previously.
+
+If you are having issues with Telegram commands not working, you may have the wrong package installed. You can fix this by running the following commands from within your activated virtual environment:
+
+1.  **Remove the potentially incorrect package**:
+    ```bash
+    pip uninstall -y py-telegram-bot-api python-telegram-bot
+    ```
+
+2.  **Force a clean re-install from `requirements.txt`**:
+    This command clears the cache and ensures you get the correct package version.
+    ```bash
+    pip install --no-cache-dir -r requirements.txt
+    ```
