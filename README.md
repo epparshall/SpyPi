@@ -154,17 +154,17 @@ To control the SpyPi via Telegram, you'll need to provide a bot token and your c
 
 ## Troubleshooting
 
-### `python-prctl` error during `pip install`
+### `pip install` fails with metadata or build errors
 
-If you encounter an error like `error while generating package metadata` for `python-prctl` (or similar packages with C extensions) during `pip install`, it means a system-level dependency is missing or `pip` is trying to compile a package that is readily available via your system's package manager.
+If you encounter an error like `error while generating package metadata` or `You need to install ... development headers` during `pip install`, it means some system-level development libraries are missing.
 
-To fix this, we will install the `python3-prctl` package directly from `apt`.
+To fix this, you need to install these required packages using your system's package manager (`apt`).
 
 1.  **Install system dependencies**:
-    This command should be run directly in your terminal on the Raspberry Pi, *outside* of your Python virtual environment.
+    This command should be run directly in your terminal on the Raspberry Pi, *outside* of your Python virtual environment. It will install the known required libraries for this project's dependencies.
     ```bash
     sudo apt-get update
-    sudo apt-get install python3-prctl
+    sudo apt-get install python3-prctl libcap-dev
     ```
 
 2.  **Retry pip install**:
