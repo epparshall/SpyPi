@@ -74,9 +74,13 @@ To control the SpyPi via Telegram, you'll need to provide a bot token and your c
 
 ### Getting your Telegram Chat ID
 
-1.  **Start your bot**: After getting your token, find your newly created bot in Telegram and send it a message (e.g., "/start").
+1.  **Find and start your bot**: In the Telegram app's search bar, type the username of the bot you just created. Select it from the search results to open a chat, then send it a message (e.g., "/start" or "hello").
 2.  **Retrieve your chat ID**: Open your web browser and go to the following URL, replacing `<YOUR_TELEGRAM_BOT_TOKEN_HERE>` with the token you just received:
     ```
     https://api.telegram.org/bot<YOUR_TELEGRAM_BOT_TOKEN_HERE>/getUpdates
     ```
-3.  **Find the ID**: Look for the "chat" object in the JSON response. Inside it, you will see an "id" field. This is your `TELEGRAM_CHAT_ID`. Copy this ID and paste it into the `.env` file.
+3.  **Find the ID**: Look for the `result` array in the JSON response. If it's empty (`[]`), go back to your bot on Telegram, send another message, and then refresh the browser page.
+    
+    Inside the `result` array, find the `message` object, and inside that, find the `chat` object. The `id` field within this `chat` object is your `TELEGRAM_CHAT_ID`.
+    
+    **Important**: Be sure to use the `id` from the `chat` object, *not* the `update_id`. Copy this `id` and paste it into the `.env` file.
