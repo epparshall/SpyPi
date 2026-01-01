@@ -170,17 +170,20 @@ To control the SpyPi via Telegram, you'll need to provide a bot token and your c
 
 ### Telegram Installation Issues
 
-The `requirements.txt` file uses `python-telegram-bot`, which is the correct package. However, a similarly named package, `py-telegram-bot-api`, can cause conflicts if it was installed previously.
+This project uses `pyTelegramBotAPI`, which provides the `telebot` module. Be careful, as there are similarly named Telegram packages that are not compatible:
 
-If you are having issues with Telegram commands not working, you may have the wrong package installed. You can fix this by running the following commands from within your activated virtual environment:
+*   `python-telegram-bot` (uses a different API and module structure)
+*   `py-telegram-bot-api` (a broken placeholder package often found on PiWheels or in caches)
 
-1.  **Remove the potentially incorrect package**:
+If Telegram imports or functionality fails, you may have an incorrect or conflicting package installed. You can fix this by running the following commands from within your activated virtual environment:
+
+1.  **Remove any conflicting Telegram-related packages**:
     ```bash
-    pip uninstall -y py-telegram-bot-api python-telegram-bot
+    pip uninstall -y pyTelegramBotAPI python-telegram-bot py-telegram-bot-api
     ```
 
-2.  **Force a clean re-install from `requirements.txt`**:
-    This command clears the cache and ensures you get the correct package version.
+2.  **Force a clean re-install of the correct package**:
+    This command clears the cache and ensures you get the correct `pyTelegramBotAPI` from PyPI.
     ```bash
     pip install --no-cache-dir -r requirements.txt
     ```
