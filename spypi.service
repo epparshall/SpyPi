@@ -5,7 +5,8 @@ After=network.target
 [Service]
 # Important: Change the paths below to match the location of your SpyPi project on the Raspberry Pi.
 # For example, if your project is in /home/pi/Projects/SpyPi, update the paths accordingly.
-ExecStart=/home/pi/SpyPi/start_spypi.sh
+# You may also need to change the path to the python executable if it's different on your system.
+ExecStart=/usr/bin/python /home/pi/SpyPi/SpyPi.py
 WorkingDirectory=/home/pi/SpyPi
 StandardOutput=inherit
 StandardError=inherit
