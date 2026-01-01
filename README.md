@@ -31,35 +31,67 @@ A window will open showing the camera feed.
 - **Right Arrow**: Pan the camera to the right.
 - **q**: Quit the application.
 
-## Run on Boot
+## Run on Boot (systemd)
 
-To automatically run the `SpyPi.py` script when your Raspberry Pi boots up, you can use the provided `start_spypi.sh` script and `crontab`.
+To automatically run the `SpyPi.py` script when your Raspberry Pi boots up, the recommended method is to use `systemd`, which is the standard service manager on Raspberry Pi OS.
 
-1. **Make the script executable**:
-   If you haven't already, make the `start_spypi.sh` script executable:
-   ```bash
-   chmod +x start_spypi.sh
-   ```
+### Setup Instructions
 
-2. **Edit your crontab**:
-   Open your crontab file for editing:
-   ```bash
-   crontab -e
-   ```
-   If it's your first time, you might be asked to choose an editor. Select your preferred one.
+1.  **Edit the service file (if necessary)**:
+    Open the `spypi.service` file. By default, it assumes the project is located at `/home/pi/SpyPi` and will be run by the `pi` user. If you placed the project in a different directory or are using a different username, you must update the `ExecStart`, `WorkingDirectory`, and `User` lines in `spypi.service` accordingly.
 
-3. **Add the boot job**:
-   Add the following line to the end of your crontab file. This will execute the `start_spypi.sh` script every time the Raspberry Pi is rebooted.
+2.  **Copy the service file**:
+    Copy the `spypi.service` file to the `systemd` directory on your Raspberry Pi. You will need to use `sudo` for this.
+    ```bash
+    sudo cp spypi.service /etc/systemd/system/spypi.service
+    ```
 
-   **Important**: Make sure to replace `/path/to/start_spypi.sh` with the absolute path to the `start_spypi.sh` script on your system. For example, if your project is in `/home/pi/SpyPi`, the line would look like this: `@reboot /home/pi/SpyPi/start_spypi.sh`
+3.  **Reload the systemd daemon**:
+    After copying the file, tell `systemd` to look for new or changed services.
+    ```bash
+    sudo systemctl daemon-reload
+    ```
 
-   ```
-   @reboot /path/to/start_spypi.sh &
-   ```
-   Adding `&` at the end will run the script in the background. This is crucial because `SpyPi.py` is a long-running process and running it in the background allows the Raspberry Pi to continue its boot sequence without waiting for the Python script to terminate.
+4.  **Enable the service**:
+    To make the service start automatically on every boot, enable it with the following command:
+    ```bash
+    sudo systemctl enable spypi.service
+    ```
 
-4. **Save and Exit**:
-   Save the file and exit the editor. Your script is now scheduled to run on boot.
+5.  **Start the service**:
+    You can start the service immediately to test it without rebooting.
+    ```bash
+    sudo systemctl start spypi.service
+    ```
+
+### Managing the Service
+
+Once the service is set up, you can manage it with these commands:
+
+-   **Check the status**:
+    See if the service is running and view its recent log output.
+    ```bash
+    sudo systemctl status spypi.service
+    ```
+    (Press `q` to exit the status view)
+
+-   **Stop the service**:
+    Manually stop the service.
+    ```bash
+    sudo systemctl stop spypi.service
+    ```
+
+-   **Start the service**:
+    Manually start the service if it's stopped.
+    ```bash
+    sudo systemctl start spypi.service
+    ```
+
+-   **Disable the service**:
+    To prevent the service from starting automatically on boot.
+    ```bash
+    sudo systemctl disable spypi.service
+    ```
 
 ## Telegram Integration
 

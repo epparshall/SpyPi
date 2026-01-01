@@ -1,0 +1,16 @@
+[Unit]
+Description=SpyPi Camera Service
+After=network.target
+
+[Service]
+# Important: Change the paths below to match the location of your SpyPi project on the Raspberry Pi.
+# For example, if your project is in /home/pi/Projects/SpyPi, update the paths accordingly.
+ExecStart=/home/pi/SpyPi/start_spypi.sh
+WorkingDirectory=/home/pi/SpyPi
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=pi
+
+[Install]
+WantedBy=multi-user.target
