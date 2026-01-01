@@ -38,7 +38,7 @@ To automatically run the `SpyPi.py` script when your Raspberry Pi boots up, the 
 ### Setup Instructions
 
 1.  **Edit the service file (if necessary)**:
-    Open the `spypi.service` file. By default, it assumes the project is located at `/home/pi/SpyPi` and will be run by the `pi` user. If you placed the project in a different directory or are using a different username, you must update the `ExecStart`, `WorkingDirectory`, and `User` lines in `spypi.service` accordingly.
+    Open the `spypi.service` file. By default, it assumes the project is located at `/home/evan/Documents/Github/SpyPi` and will be run by the `evan` user. If you placed the project in a different directory or are using a different username, you must update the `ExecStart`, `WorkingDirectory`, and `User` lines in `spypi.service` accordingly.
 
 2.  **Copy the service file**:
     Copy the `spypi.service` file to the `systemd` directory on your Raspberry Pi. You will need to use `sudo` for this.

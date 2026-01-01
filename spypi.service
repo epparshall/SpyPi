@@ -6,12 +6,12 @@ After=network.target
 # Important: Change the paths below to match the location of your SpyPi project on the Raspberry Pi.
 # For example, if your project is in /home/pi/Projects/SpyPi, update the paths accordingly.
 # You may also need to change the path to the python executable if it's different on your system.
-ExecStart=/usr/bin/python /home/pi/SpyPi/SpyPi.py
-WorkingDirectory=/home/pi/SpyPi
+ExecStart=/usr/bin/python /home/evan/Documents/Github/SpyPi/SpyPi.py
+WorkingDirectory=/home/evan/Documents/Github/SpyPi
 StandardOutput=inherit
 StandardError=inherit
 Restart=always
-User=pi
+User=evan
 
 [Install]
 WantedBy=multi-user.target
