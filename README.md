@@ -8,18 +8,53 @@ This project allows you to manually control the direction of a Raspberry Pi came
 
 ## Installation
 
-1. Clone this repository.
-2. Install the required Python libraries using pip:
-   ```bash
-   pip install -r requirements.txt
-   ```
+This project uses a virtual environment to manage dependencies and avoid conflicts with system-wide Python packages.
+
+1.  **Clone this repository**:
+    ```bash
+    git clone <repository_url>
+    cd SpyPi
+    ```
+
+2.  **Create a virtual environment**:
+    From the project's root directory, create a new virtual environment named `.venv`.
+    ```bash
+    python3 -m venv .venv
+    ```
+
+3.  **Activate the virtual environment**:
+    Before installing packages, you need to activate the environment.
+    ```bash
+    source .venv/bin/activate
+    ```
+    Your shell prompt should now be prefixed with `(.venv)`.
+
+4.  **Install the required libraries**:
+    Now, use pip to install the packages from `requirements.txt`.
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 ## Usage
 
-Run the script from your terminal:
-```bash
-python SpyPi.py
-```
+Before running the script, make sure you are in the project directory and have activated the virtual environment.
+
+1.  **Activate the virtual environment** (if it's not already active):
+    ```bash
+    source .venv/bin/activate
+    ```
+
+2.  **Run the script**:
+    ```bash
+    python3 SpyPi.py
+    ```
+    A window will open showing the camera feed.
+
+3.  **Deactivate the virtual environment** (optional):
+    When you are finished, you can deactivate the environment.
+    ```bash
+    deactivate
+    ```
 
 A window will open showing the camera feed.
 
