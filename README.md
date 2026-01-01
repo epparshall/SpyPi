@@ -8,29 +8,44 @@ This project allows you to manually control the direction of a Raspberry Pi came
 
 ## Installation
 
-This project uses a virtual environment to manage dependencies and avoid conflicts with system-wide Python packages.
+This project requires a mix of system-level libraries (for hardware access) and Python packages. Follow these steps in order for a correct setup on a Raspberry Pi.
 
-1.  **Clone this repository**:
+1.  **Clone the Repository**:
+    First, get the code onto your Raspberry Pi.
     ```bash
     git clone <repository_url>
     cd SpyPi
     ```
 
-2.  **Create a virtual environment**:
-    From the project's root directory, create a new virtual environment named `.venv`.
+2.  **Fix Directory Ownership**:
+    This step is crucial to avoid "Permission denied" errors during package installation. If you used `sudo` to clone, you must give ownership back to your user.
     ```bash
-    python3 -m venv .venv
+    # Replace 'evan' with your actual username if different
+    sudo chown -R evan:evan .
     ```
 
-3.  **Activate the virtual environment**:
-    Before installing packages, you need to activate the environment.
+3.  **Install System-Level Dependencies via `apt`**:
+    On Raspberry Pi, the entire camera stack (`picamera2` and `libcamera`) and other dependencies should be installed via `apt`. This handles all hardware-specific libraries correctly.
+    ```bash
+    sudo apt-get update
+    sudo apt-get install python3-picamera2 python3-prctl libcap-dev
+    ```
+
+4.  **Create a Virtual Environment (with System Access)**:
+    This isolates the project's dependencies while allowing access to the system-wide Python packages we installed via `apt`. The `--system-site-packages` flag is essential for hardware-specific libraries like `picamera2`.
+    ```bash
+    python3 -m venv .venv --system-site-packages
+    ```
+
+5.  **Activate the Virtual Environment**:
+    You must activate the environment every time you open a new terminal to work on the project.
     ```bash
     source .venv/bin/activate
     ```
-    Your shell prompt should now be prefixed with `(.venv)`.
+    Your shell prompt should change to show `(.venv)`.
 
-4.  **Install the required libraries**:
-    Now, use pip to install the packages from `requirements.txt`.
+6.  **Install Remaining Python Packages via `pip`**:
+    Finally, install the remaining application-level Python libraries into your active virtual environment. **Do not use `sudo` for this command.**
     ```bash
     pip install -r requirements.txt
     ```
@@ -48,7 +63,6 @@ Before running the script, make sure you are in the project directory and have a
     ```bash
     python3 SpyPi.py
     ```
-    A window will open showing the camera feed.
 
 3.  **Deactivate the virtual environment** (optional):
     When you are finished, you can deactivate the environment.
@@ -151,25 +165,3 @@ To control the SpyPi via Telegram, you'll need to provide a bot token and your c
     Inside the `result` array, find the `message` object, and inside that, find the `chat` object. The `id` field within this `chat` object is your `TELEGRAM_CHAT_ID`.
     
     **Important**: Be sure to use the `id` from the `chat` object, *not* the `update_id`. Copy this `id` and paste it into the `.env` file.
-
-## Troubleshooting
-
-### `pip install` fails with metadata or build errors
-
-If you encounter an error like `error while generating package metadata` or `You need to install ... development headers` during `pip install`, it means some system-level development libraries are missing.
-
-To fix this, you need to install these required packages using your system's package manager (`apt`).
-
-1.  **Install system dependencies**:
-    This command should be run directly in your terminal on the Raspberry Pi, *outside* of your Python virtual environment. It will install the known required libraries for this project's dependencies.
-    ```bash
-    sudo apt-get update
-    sudo apt-get install python3-prctl libcap-dev
-    ```
-
-2.  **Retry pip install**:
-    After the `apt` installation completes, make sure your virtual environment is activated (`source .venv/bin/activate`) and then retry installing your Python requirements:
-    ```bash
-    pip install -r requirements.txt
-    ```
-    This should now complete successfully.
