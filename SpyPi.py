@@ -80,13 +80,18 @@ class SpyPi:
 
                 def capture_and_send():
                     try:
-                        config = self.picam2.create_still_configuration()
+                        # Create still configuration with same or reduced resolution
+                        config = self.picam2.create_still_configuration(main={"size": (1024, 768)})  # smaller than full res
+
                         image_path = f"capture_{int(time.time())}.jpg"
 
                         # Blocking capture
-                        self.picam2.switch_mode_and_capture_file(
-                            config, image_path, quality=self.jpeg_quality, wait=True
-                        )
+                        self.picam2.switch_mode_and_capture_file(config, image_path, wait=True)
+
+                        # Optional: compress JPEG manually if needed
+                        # from PIL import Image
+                        # img = Image.open(image_path)
+                        # img.save(image_path, "JPEG", quality=self.jpeg_quality)
 
                         with open(image_path, 'rb') as photo:
                             self.bot.send_photo(message.chat.id, photo)
@@ -96,6 +101,7 @@ class SpyPi:
                     except Exception as e:
                         self.bot.reply_to(message, f"Failed to capture image: {e}")
                         print(f"[Telegram] Failed to capture image: {e}")
+
 
                 threading.Thread(target=capture_and_send, daemon=True).start()
 
@@ -136,7 +142,7 @@ class SpyPi:
         try:
             while True:
                 frame = self.picam2.capture_array()
-                flipped_frame = cv2.flip(frame, 1)
+                flipped_frame = cv2.flip(frame, 0)
                 cv2.imshow("Camera Output", flipped_frame)
 
                 key = cv2.waitKey(self.waitkey_interval) & 0xFF
