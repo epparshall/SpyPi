@@ -1,4 +1,4 @@
 opencv-python
 pantilthat
-py-telegram-bot-api
+pyTelegramBotAPI
 python-dotenv
